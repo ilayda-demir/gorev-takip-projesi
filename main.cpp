@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 #include <limits>
+#include <vector>
+#include <algorithm>
 
 class Task{
 
@@ -33,6 +35,11 @@ void complete(){
 
     is_completed= true;
 }
+
+bool isCompleted() const {
+    return is_completed;
+}
+
 
 void  display() const{
 
@@ -72,6 +79,35 @@ for(const auto& eleman: gorevler){
 
 }
 
+int sayCompletedTasks(const std::map<int, Task>& gorevler) {
+    return std::count_if(gorevler.begin(), gorevler.end(), [](const auto& eleman) {
+        const Task& g = eleman.second;
+        return g.isCompleted(); // is_completed kontrolü için getter lazım!
+    });
+}
+
+
+void listeleIsmeGore(const std::map<int, Task>& gorevler){
+
+
+    std::vector<Task> kopya;
+
+    for (const auto& eleman : gorevler) {
+        kopya.push_back(eleman.second);
+    }
+
+    std::sort(kopya.begin(), kopya.end(), [](const Task& a, const Task& b) {
+        return a.getName() < b.getName();
+    });
+
+    std::cout << "--- İsme Göre Sıralı Görevler ---" << std::endl;
+    for (const auto& g : kopya) {
+        g.display();
+    }
+
+
+}
+
 
 
 
@@ -84,7 +120,7 @@ int main(){
 
     do {
 
-        std::cout<<"Gorev eklemek icin 1'e, gorev listelemek icin 2'ye cikis yapmak icin 3'e, gorev tamamlamak icin 4'e, silmek icin 5'e, gorev aramak icin 6'ya  basiniz."<<std::endl;
+        std::cout<<"Gorev eklemek icin 1'e, gorev listelemek icin 2'ye cikis yapmak icin 3'e, gorev tamamlamak icin 4'e, silmek icin 5'e, gorev aramak icin 6'ya, gorevleri isime gore siralamak icin 7'ye, tamamlanan gorev sayisi icin 8'e    basiniz."<<std::endl;
 
         std::cin>> secim;
 
@@ -159,18 +195,34 @@ int main(){
                     std::cout << "Bu ID'ye sahip bir gorev bulunamadi!" << std::endl;
                 }}
 
-            else if(secim==6){
+        else if(secim==6){
 
-                std::string isim;
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize> :: max(), '\n');
-                std::cout<< "Gorev adi giriniz."<< std::endl;
-                std::getline(std::cin, isim);
-                findTaskByName(mapim, isim);
-
+            std::string isim;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize> :: max(), '\n');
+            std::cout<< "Gorev adi giriniz."<< std::endl;
+            std::getline(std::cin, isim);
+            findTaskByName(mapim, isim);
+             
 
 
             }
+
+        else if (secim == 7) {
+            listeleIsmeGore(mapim);
+            }
+
+        else if (secim == 8) {
+    int adet = sayCompletedTasks(mapim);
+    std::cout << "Tamamlanan gorev sayisi: " << adet << std::endl;
+    }
+    else if (secim == 8) {
+        int adet = sayCompletedTasks(mapim);
+        std::cout << "Tamamlanan gorev sayisi: " << adet << std::endl;
+    }
+    
+
+            
 
         else {
             std::cout << "Gecerli bir secim yapmadiniz." << std::endl;
