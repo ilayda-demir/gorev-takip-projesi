@@ -5,6 +5,9 @@
 #include <vector>
 #include <algorithm>
 
+
+enum class Oncelik {Dusuk, Orta, Yuksek};
+
 class Task{
 
 private:
@@ -12,6 +15,8 @@ private:
 std::string name;
 int id;
 bool is_completed;
+Oncelik onem;
+
 
 
 public:
@@ -23,11 +28,12 @@ Task() {
     is_completed = false;
 }
 
-Task(int id_, std::string name_){
+Task(int id_, std::string name_, Oncelik onem_){
 
 name=name_;
 id=id_;
 is_completed= false;
+onem= onem_;
 
 }
 
@@ -46,8 +52,18 @@ void  display() const{
 std::cout<<"id:"<<id<<std::endl;
 std::cout<<"name:"<<name<<std::endl;
 std::cout<<"is completed?:"<<(is_completed ? "tamamlandi" : "tamamlanmadi")<<std::endl;
+std::cout<<"Oncelik:";
 
+switch(onem){
+
+    case Oncelik::Dusuk : std::cout << "Dusuk"; break;
+    case Oncelik::Orta: std::cout << "Orta"; break;
+    case Oncelik::Yuksek: std::cout << "Yuksek"; break;
 }
+std::cout << std::endl;
+}
+
+
 
 std::string  getName() const{
 
@@ -141,7 +157,19 @@ int main(){
 
             std::getline(std::cin, name_);
 
-            Task gorev(counter, name_);
+           
+
+            int oncelikSecim;
+            std::cout << "Oncelik secin (0: Dusuk, 1: Orta, 2: Yuksek): ";
+            std::cin >> oncelikSecim;
+
+            
+            Oncelik oncelik;
+            if (oncelikSecim == 0) oncelik = Oncelik::Dusuk;
+            else if (oncelikSecim == 1) oncelik = Oncelik::Orta;
+            else oncelik = Oncelik::Yuksek;
+
+            Task gorev(counter, name_, oncelik);
 
 
             mapim[counter]= gorev;
@@ -215,10 +243,6 @@ int main(){
         else if (secim == 8) {
     int adet = sayCompletedTasks(mapim);
     std::cout << "Tamamlanan gorev sayisi: " << adet << std::endl;
-    }
-    else if (secim == 8) {
-        int adet = sayCompletedTasks(mapim);
-        std::cout << "Tamamlanan gorev sayisi: " << adet << std::endl;
     }
     
 
